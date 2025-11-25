@@ -2,12 +2,13 @@ import { get_gl, createProgram, create_buffer, create_VAO, get_attributes, enabl
 
 
 export class rect{
-    constructor(gl,program,x,y,size){
+    constructor(gl,program,x,y,sizeX,sizeY){
         this.gl = gl;
         this.program = program;
         this.x = x;
         this.y = y;
-        this.size = size;
+        this.sizeX = sizeX;
+        this.sizeY = sizeY;
     }
 
     verts = new Float32Array([
@@ -40,8 +41,8 @@ export class rect{
         
         gl.uniform2f(pos,this.x,this.y);
 
-        const sizeLoc = gl.getUniformLocation(this.program, "size");
-        gl.uniform1f(sizeLoc, this.size);
+        const scaleLoc = gl.getUniformLocation(this.program, "uScale");
+        gl.uniform2f(scaleLoc, this.sizeX,this.sizeY);
 
         gl.drawElements(gl.TRIANGLES, this.indices.length, gl.UNSIGNED_SHORT, 0);
         gl.bindVertexArray(null);

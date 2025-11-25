@@ -13,8 +13,8 @@ export async function init(){
     
 
     let objs = [
-        new rect(gl,program,0.4,0.3,0.5),
-        new rect(gl,program,-0.3,-0.3,0.3)
+        new rect(gl,program,0.4,0.3,0.5,0.5),
+        new rect(gl,program,-0.3,-0.3,0.3,1)
     ];
 
     let deltaTime = 0, lastFrame = 0;
