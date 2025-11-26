@@ -2,6 +2,7 @@ import { canvas_init } from "./canvas.js";
 import { get_gl, createProgram, create_buffer, create_VAO, get_attributes, enable_vao } from "./webgl.js";
 import { rect } from "./rect.js";
 
+
 export async function init(){
     const canvas = canvas_init();
 
@@ -13,8 +14,8 @@ export async function init(){
     
 
     let objs = [
-        new rect(gl,program,0.4,0.3,0.5,0.5),
-        new rect(gl,program,-0.3,-0.3,0.3,1)
+        new rect(program,0.4,0.3,0.3,0.5),
+        new rect(program,-0.3,-0.3,0.3,0.5)
     ];
 
     let deltaTime = 0, lastFrame = 0;
@@ -29,9 +30,9 @@ export async function init(){
         canvas.height = canvas.clientHeight * window.devicePixelRatio;
         gl.viewport(0, 0, canvas.width, canvas.height);
 
-        objs[0].x +=0.001;
+        objs[0].sizeY +=0.001;
         objs.forEach(element => {
-            element.draw()
+            element.draw(gl)
         });
 
         requestAnimationFrame(frame);
