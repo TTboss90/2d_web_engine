@@ -6,4 +6,4 @@ export function canvas_init(){
 
     document.body.appendChild(canvas);
     return canvas
-}
+} 

@@ -1,0 +1,59 @@
+import { get_gl, createProgram, create_buffer, create_VAO, get_attributes, enable_vao } from "./webgl.js";
+
+export class rect {
+    constructor(x, y, size, imageSrc) {
+        this.x = x;
+        this.y = y;
+        this.size = size;
+        this.loaded = false;
+
+        const image = new Image();
+        image.crossOrigin = "anonymous";
+        image.src = imageSrc;
+
+        image.onload = () => {
+            this.texture = this.createTexture(glGlobal, image); // pass gl to this class or set global
+            this.width = image.width;
+            this.height = image.height;
+            this.loaded = true;
+        };
+    } 
+
+    createTexture(gl, image) {
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+
+        const tex = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, tex);
+
+        gl.texImage2D(
+            gl.TEXTURE_2D,
+            0,
+            gl.RGBA,
+            gl.RGBA,
+            gl.UNSIGNED_BYTE,
+            image
+        );
+
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+        return tex;
+    }
+
+    draw(gl, program) {
+        if (!this.loaded) return;
+
+        const sampler = gl.getUniformLocation(program, "u_image");
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, this.texture);
+        gl.uniform1i(sampler, 0);
+
+        gl.uniform2f(gl.getUniformLocation(program,"pos"), this.x, this.y);
+        gl.uniform1f(gl.getUniformLocation(program,"uScale"), this.size);
+
+        const texSize = gl.getUniformLocation(program, "u_textureSize");
+        gl.uniform2f(texSize, this.width, this.height);
+    }
+}
